@@ -1,1 +1,36 @@
+{
+    "name": "Calculateur d'Anges",
+    "short_name": "Anges",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#1a73e8",
+    "icons": [
+        {
+            "src": "icon.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}
 
+// sw.js (Service Worker)
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open('anges-v1').then((cache) => {
+            return cache.addAll([
+                'index.html',
+                'manifest.json',
+                'icon.png'
+            ]);
+        })
+    );
+});
+
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
+});
