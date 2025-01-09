@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anges du Jour</title>
     <link rel="manifest" href="manifest.json">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -48,7 +49,7 @@
 <body>
     <div class="header">Anges du Jour</div>
     <div class="card">
-        <div class="time">Lever du soleil :</div>
+        <div class="time">Lever du soleil à Kremikovtsi :</div>
         <div id="sunrise">Chargement...</div>
     </div>
     <div class="card">
@@ -64,18 +65,34 @@
 
     <script>
         const ANGELS = [
-            "Vehuhiah", "Jeliel", "Sitael", "Elemiah", "Mahasiah",
-            // Ajoutez les autres anges ici
+            // Premier chœur
+            "Vehuiah", "Jeliel", "Sitael", "Elemiah", "Mahasiah", "Lelahel", "Achaiah", "Cahetel",
+            // Deuxième chœur
+            "Haziel", "Aladiah", "Lauviah", "Hahaiah", "Iezael", "Mebahel", "Hariel", "Hakamiah",
+            // Troisième chœur
+            "Lauviah", "Caliel", "Leuviah", "Pahaliah", "Nelkhael", "Yeiayel", "Melahel", "Haheuiah",
+            // Quatrième chœur
+            "Nith-Haiah", "Haaiah", "Yerathel", "Seheiah", "Reiyel", "Omael", "Lecabel", "Vasariah",
+            // Cinquième chœur
+            "Yehuiah", "Lehahiah", "Chavakiah", "Menadel", "Aniel", "Haamiah", "Rehael", "Yeiazel",
+            // Sixième chœur
+            "Hahahel", "Mikael", "Veualiah", "Yelahiah", "Sealiah", "Ariel", "Asaliah", "Mihael",
+            // Septième chœur
+            "Vehuel", "Daniel", "Hahasiah", "Imamiah", "Nanael", "Nithael", "Mebahiah", "Poyel",
+            // Huitième chœur
+            "Nemamiah", "Yeialel", "Harahel", "Mitzrael", "Umabel", "Iahhel", "Anauel", "Mehiel",
+            // Neuvième chœur
+            "Damabiah", "Manakel", "Eyael", "Habuhiah", "Rochel", "Jabamiah", "Haiaiel", "Mumiah"
         ];
 
         const MINUTES_PER_ANGEL = 20;
+        const KREMIKOVTSI_LAT = 42.7833;
+        const KREMIKOVTSI_LON = 23.4833;
 
         function calculateSunrise() {
-            // Simulation du lever du soleil - à remplacer par un vrai calcul
-            const now = new Date();
-            now.setHours(6);
-            now.setMinutes(0);
-            return now;
+            const date = new Date();
+            const sunTimes = SunCalc.getTimes(date, KREMIKOVTSI_LAT, KREMIKOVTSI_LON);
+            return sunTimes.sunrise;
         }
 
         function getCurrentAngel() {
