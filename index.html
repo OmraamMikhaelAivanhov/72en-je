@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anges du Jour</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .current-angel {
+            color: #1a73e8;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .time {
+            color: #666;
+            font-size: 0.9em;
+        }
+        button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+        .header {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Anges du Jour</div>
+    <div class="card">
+        <div class="time">Lever du soleil :</div>
+        <div id="sunrise">Chargement...</div>
+    </div>
+    <div class="card">
+        <div class="time">Ange actuel :</div>
+        <div id="currentAngel" class="current-angel">Chargement...</div>
+        <div id="timeRange" class="time"></div>
+    </div>
+    <div class="card">
+        <div class="time">Prochain ange :</div>
+        <div id="nextAngel">Chargement...</div>
+    </div>
+    <button onclick="refreshData()">Actualiser</button>
+
+    <script>
+        const ANGELS = [
+            "Vehuhiah", "Jeliel", "Sitael", "Elemiah", "Mahasiah",
+            // Ajoutez les autres anges ici
+        ];
+
+        const MINUTES_PER_ANGEL = 20;
+
+        function calculateSunrise() {
+            // Simulation du lever du soleil - à remplacer par un vrai calcul
+            const now = new Date();
+            now.setHours(6);
+            now.setMinutes(0);
+            return now;
+        }
+
+        function getCurrentAngel() {
+            const now = new Date();
+            const sunrise = calculateSunrise();
+            const minutesSinceSunrise = 
+                (now.getTime() - sunrise.getTime()) / (1000 * 60);
+            
+            const angelIndex = 
+                Math.floor((minutesSinceSunrise / MINUTES_PER_ANGEL)) % ANGELS.length;
+            
+            return {
+                current: ANGELS[angelIndex],
+                next: ANGELS[(angelIndex + 1) % ANGELS.length],
+                startTime: new Date(now.getTime() - 
+                    (minutesSinceSunrise % MINUTES_PER_ANGEL) * 60 * 1000),
+                endTime: new Date(now.getTime() + 
+                    (MINUTES_PER_ANGEL - (minutesSinceSunrise % MINUTES_PER_ANGEL)) 
+                    * 60 * 1000)
+            };
+        }
+
+        function refreshData() {
+            const sunrise = calculateSunrise();
+            document.getElementById('sunrise').textContent = 
+                sunrise.toLocaleTimeString('fr-FR').slice(0, 5);
+
+            const angelInfo = getCurrentAngel();
+            document.getElementById('currentAngel').textContent = 
+                angelInfo.current;
+            document.getElementById('timeRange').textContent = 
+                `${angelInfo.startTime.toLocaleTimeString('fr-FR').slice(0, 5)} - 
+                ${angelInfo.endTime.toLocaleTimeString('fr-FR').slice(0, 5)}`;
+            document.getElementById('nextAngel').textContent = 
+                angelInfo.next;
+        }
+
+        // Actualiser toutes les minutes
+        setInterval(refreshData, 60000);
+        refreshData();
+
+        // Service Worker pour le PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
